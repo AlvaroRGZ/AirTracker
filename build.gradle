@@ -1,0 +1,23 @@
+buildscript {
+    ext {
+        agp_version = '8.1.2'
+		gms_version = '4.4.0'
+    }
+}
+
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+plugins {
+  id 'com.android.application' version "$agp_version" apply false
+
+  // Add the dependency for the Google services Gradle plugin
+  id 'com.google.gms.google-services' version "$gms_version" apply false
+}
+
+ext {
+    appCompatVersion = '1.6.1'
+    constraintLayoutVersion = '2.0.4'
+
+    firebaseBoMVersion = '32.4.0'
+    firebaseUIAuthVersion = '8.0.2'
+}
+

@@ -1,0 +1,49 @@
+plugins {
+    id 'com.android.application'
+
+    // Add the Google services Gradle plugin
+    id 'com.google.gms.google-services'
+}
+
+android {
+    namespace 'es.upm.miw.airtracker'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "es.upm.miw.airtracker"
+        minSdk 26
+        targetSdk 33
+        versionCode 1
+        versionName "1.0"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    defaultConfig {
+        resConfigs "en" // And any other languages you support
+        resConfigs "es"
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    implementation "androidx.appcompat:appcompat:$appCompatVersion"
+    implementation "com.android.support.constraint:constraint-layout:$constraintLayoutVersion"
+
+    // Import the Firebase BoM
+    implementation(platform("com.google.firebase:firebase-bom:$firebaseBoMVersion"))
+
+    // Firebase Auth
+    implementation "com.google.firebase:firebase-auth"
+    // https://github.com/firebase/FirebaseUI-Android/tree/master/auth
+    implementation "com.firebaseui:firebase-ui-auth:$firebaseUIAuthVersion"
+}
