@@ -1,12 +1,11 @@
-
-package com.example;
+package es.upm.miw.airtracker.model;
 
 import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 @Generated("jsonschema2pojo")
-public class Example {
+public class Result {
 
     @SerializedName("location")
     @Expose

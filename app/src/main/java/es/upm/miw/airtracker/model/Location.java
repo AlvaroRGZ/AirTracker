@@ -1,5 +1,4 @@
-
-package com.example;
+package es.upm.miw.airtracker.model;
 
 import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;
