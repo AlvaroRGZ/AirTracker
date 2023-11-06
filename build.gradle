@@ -19,5 +19,8 @@ ext {
 
     firebaseBoMVersion = '32.4.0'
     firebaseUIAuthVersion = '8.0.2'
+
+    retrofit2Version = '2.9.0'
+    gsonVersion = '2.10.1'
 }
 

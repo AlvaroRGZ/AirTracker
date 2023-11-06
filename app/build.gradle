@@ -46,4 +46,11 @@ dependencies {
     implementation "com.google.firebase:firebase-auth"
     // https://github.com/firebase/FirebaseUI-Android/tree/master/auth
     implementation "com.firebaseui:firebase-ui-auth:$firebaseUIAuthVersion"
+    implementation 'androidx.recyclerview:recyclerview:1.3.2'
+
+    // Retrofit
+    implementation "com.squareup.retrofit2:retrofit:$rootProject.retrofit2Version"
+    implementation "com.squareup.retrofit2:converter-gson:$rootProject.retrofit2Version"
+    implementation "com.google.code.gson:gson:$rootProject.gsonVersion"
+    implementation 'org.glassfish:javax.annotation:3.1.1'
 }

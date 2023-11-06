@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -95,7 +96,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     @Override
     public void onClick(View v) {
-        mFirebaseAuth.signOut();
-        Log.i(LOG_TAG, getString(R.string.signed_out));
+        startActivity(new Intent(MainActivity.this, DataActivity.class));
+        Log.i(LOG_TAG, "[=>] Pantalla de datos");
     }
+
 }
