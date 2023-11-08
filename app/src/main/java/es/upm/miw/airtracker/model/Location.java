@@ -1,10 +1,13 @@
 package es.upm.miw.airtracker.model;
 
 import javax.annotation.Generated;
+
+import com.google.firebase.database.IgnoreExtraProperties;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 @Generated("jsonschema2pojo")
+@IgnoreExtraProperties
 public class Location {
 
     @SerializedName("name")
@@ -96,4 +99,17 @@ public class Location {
         this.localtime = localtime;
     }
 
+    @Override
+    public String toString() {
+        return "Location{" +
+                "name='" + name + '\'' +
+                ", region='" + region + '\'' +
+                ", country='" + country + '\'' +
+                ", lat=" + lat +
+                ", lon=" + lon +
+                ", tzId='" + tzId + '\'' +
+                ", localtimeEpoch=" + localtimeEpoch +
+                ", localtime='" + localtime + '\'' +
+                '}';
+    }
 }

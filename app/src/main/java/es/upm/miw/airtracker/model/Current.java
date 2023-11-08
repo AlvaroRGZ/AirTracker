@@ -1,10 +1,13 @@
 package es.upm.miw.airtracker.model;
 
 import javax.annotation.Generated;
+
+import com.google.firebase.database.IgnoreExtraProperties;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 @Generated("jsonschema2pojo")
+@IgnoreExtraProperties
 public class Current {
 
     @SerializedName("last_updated_epoch")
@@ -261,4 +264,32 @@ public class Current {
         this.gustKph = gustKph;
     }
 
+    @Override
+    public String toString() {
+        return "Current{" +
+                "lastUpdatedEpoch=" + lastUpdatedEpoch +
+                ", lastUpdated='" + lastUpdated + '\'' +
+                ", tempC=" + tempC +
+                ", tempF=" + tempF +
+                ", isDay=" + isDay +
+                ", condition=" + condition +
+                ", windMph=" + windMph +
+                ", windKph=" + windKph +
+                ", windDegree=" + windDegree +
+                ", windDir='" + windDir + '\'' +
+                ", pressureMb=" + pressureMb +
+                ", pressureIn=" + pressureIn +
+                ", precipMm=" + precipMm +
+                ", precipIn=" + precipIn +
+                ", humidity=" + humidity +
+                ", cloud=" + cloud +
+                ", feelslikeC=" + feelslikeC +
+                ", feelslikeF=" + feelslikeF +
+                ", visKm=" + visKm +
+                ", visMiles=" + visMiles +
+                ", uv=" + uv +
+                ", gustMph=" + gustMph +
+                ", gustKph=" + gustKph +
+                '}';
+    }
 }

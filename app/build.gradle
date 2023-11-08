@@ -53,4 +53,5 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-gson:$rootProject.retrofit2Version"
     implementation "com.google.code.gson:gson:$rootProject.gsonVersion"
     implementation 'org.glassfish:javax.annotation:3.1.1'
+    implementation 'com.google.firebase:firebase-database:20.3.0'
 }

@@ -1,10 +1,13 @@
 package es.upm.miw.airtracker.model;
 
 import javax.annotation.Generated;
+
+import com.google.firebase.database.IgnoreExtraProperties;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 @Generated("jsonschema2pojo")
+@IgnoreExtraProperties
 public class Condition {
 
     @SerializedName("text")
@@ -16,6 +19,15 @@ public class Condition {
     @SerializedName("code")
     @Expose
     private Integer code;
+
+    public Condition() {
+    }
+
+    public Condition(String text, String icon, Integer code) {
+        this.text = text;
+        this.icon = icon;
+        this.code = code;
+    }
 
     public String getText() {
         return text;
@@ -41,4 +53,12 @@ public class Condition {
         this.code = code;
     }
 
+    @Override
+    public String toString() {
+        return "Condition{" +
+                "text='" + text + '\'' +
+                ", icon='" + icon + '\'' +
+                ", code=" + code +
+                '}';
+    }
 }

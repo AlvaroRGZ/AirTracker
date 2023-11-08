@@ -1,25 +1,35 @@
 package es.upm.miw.airtracker;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.util.List;
+import com.google.firebase.Firebase;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.UUID;
 
 import es.upm.miw.airtracker.api.AirQualityRESTAPIService;
-import es.upm.miw.airtracker.model.Result;
+import es.upm.miw.airtracker.firebase.FirebaseClient;
+import es.upm.miw.airtracker.model.Condition;
+import es.upm.miw.airtracker.model.Weather;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+
 // import androidx.recyclerview.widget.LinearLayoutManager;
 // import androidx.recyclerview.widget.RecyclerView;
 
@@ -29,11 +39,18 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class DataActivity extends AppCompatActivity {
     // private ScoreViewModel mScoreViewModel;
+    private static final String TAG = "DATA";
     private static final String API_BASE_URL = "https://api.weatherapi.com/";
     private static final String k = "0ed93a21f84e47b1a38203517230511";
     private static final String aqi = "no";
     private TextView tvResultado;
+    private TextView tvSaved;
     private AirQualityRESTAPIService apiService;
+    private static final String FIREBASE_URL = "https://airtracker-d4e8e-default-rtdb.europe-west1.firebasedatabase.app";
+
+    private FirebaseDatabase database;
+    private DatabaseReference databaseReference;
+    private Integer n = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +58,7 @@ public class DataActivity extends AppCompatActivity {
         setContentView(R.layout.activity_data);
 
         this.tvResultado = findViewById(R.id.tvResult);
+        this.tvSaved = findViewById(R.id.tvSaved);
 
         // RecyclerView recyclerView = findViewById(R.id.recyclerview);
         // final ScoreListAdapter adapter = new ScoreListAdapter(new ScoreListAdapter.ScoreDiff());
@@ -51,6 +69,9 @@ public class DataActivity extends AppCompatActivity {
         // mScoreViewModel.getAllScores().observe(this, scores -> {
         //     adapter.submitList(scores);
         // });
+
+        database = FirebaseDatabase.getInstance(FIREBASE_URL);
+        databaseReference = database.getReference("weather");
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(API_BASE_URL)
@@ -67,29 +88,26 @@ public class DataActivity extends AppCompatActivity {
 
         Button getData = findViewById(R.id.btnGetData);
         getData.setOnClickListener(view -> {
-            
+
             EditText etNombreZona = findViewById(R.id.etNombreZona);
 
-            Call<Result> call_async = apiService.getZoneLocation(k, etNombreZona.getText().toString(), aqi);
+            Call<Weather> call_async = apiService.getZoneLocation(k, etNombreZona.getText().toString(), aqi);
 
-            // Asíncrona
-            call_async.enqueue(new Callback<Result>() {
-
-                /**
-                 * Invoked for a received HTTP response.
-                 * <p>
-                 * Note: An HTTP response may still indicate an application-level failure such as a 404 or 500.
-                 * Call {@link Response#isSuccessful()} to determine if the response indicates success.
-                 */
+            call_async.enqueue(new Callback<Weather>() {
                 @Override
-                public void onResponse(Call<Result> call, Response<Result> response) {
-                    Result result = response.body();
-                    if (null != result) {
-                        tvResultado.append(result.getLocation().getName() + ", " + result.getLocation().getCountry() +
-                                           "\n    Last: " + result.getCurrent().getLastUpdated());
+                public void onResponse(Call<Weather> call, Response<Weather> response) {
+                    Weather weather = response.body();
+                    if (null != weather) {
+                        tvResultado.setText(weather.getLocation().getName() + ", " + weather.getLocation().getCountry() +
+                                "\n    Last: " + weather.getCurrent().getLastUpdated());
 
+                        tvSaved.setText(weather.getLocation().getName() + ", " + weather.getLocation().getCountry() +
+                                "\n    Last: " + weather.getCurrent().getLastUpdated());
+
+                        databaseReference.child(weather.getLocation().getLocaltimeEpoch().toString()).setValue(weather);
+                        registerListeners(weather.getLocation().getLocaltimeEpoch().toString());
                     } else {
-                        tvResultado.setText("No se ha recibido nada");
+                        tvResultado.setText("Pais no encontrado");
                     }
                 }
 
@@ -98,7 +116,7 @@ public class DataActivity extends AppCompatActivity {
                  * exception occurred creating the request or processing the response.
                  */
                 @Override
-                public void onFailure(Call<Result> call, Throwable t) {
+                public void onFailure(Call<Weather> call, Throwable t) {
                     Toast.makeText(
                             getApplicationContext(),
                             "ERROR: " + t.getMessage(),
@@ -108,5 +126,24 @@ public class DataActivity extends AppCompatActivity {
                 }
             });
         });
+    }
+
+    public void registerListeners(String entity) {
+        ValueEventListener postListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.i(TAG, dataSnapshot.toString());
+                Weather weather = dataSnapshot.getValue(Weather.class);
+                tvSaved.setText(weather.getLocation().getName() + ", " + weather.getLocation().getCountry() +
+                        "\n    Last: " + weather.getCurrent().getLastUpdated());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+            }
+        };
+        databaseReference.child(entity).addValueEventListener(postListener);
     }
 }

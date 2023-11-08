@@ -1,11 +1,14 @@
 package es.upm.miw.airtracker.model;
 
 import javax.annotation.Generated;
+
+import com.google.firebase.database.IgnoreExtraProperties;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 @Generated("jsonschema2pojo")
-public class Result {
+@IgnoreExtraProperties
+public class Weather {
 
     @SerializedName("location")
     @Expose
@@ -13,6 +16,10 @@ public class Result {
     @SerializedName("current")
     @Expose
     private Current current;
+
+    public Weather() {
+        // Default constructor required for calls to DataSnapshot.getValue(Weather.class)
+    }
 
     public Location getLocation() {
         return location;
@@ -30,4 +37,11 @@ public class Result {
         this.current = current;
     }
 
+    @Override
+    public String toString() {
+        return "Weather{" +
+                "location=" + location +
+                ", current=" + current +
+                '}';
+    }
 }
