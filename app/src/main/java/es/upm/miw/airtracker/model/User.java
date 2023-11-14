@@ -3,15 +3,25 @@ package es.upm.miw.airtracker.model;
 import java.util.List;
 
 public class User {
+    private String uid;
     private String name;
     private String email;
 
     private List<String> favouriteZones;
 
-    public User(String name, String email, List<String> favouriteZones) {
+    public User(String uid, String name, String email, List<String> favouriteZones) {
+        this.uid = uid;
         this.name = name;
         this.email = email;
         this.favouriteZones = favouriteZones;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     public String getName() {

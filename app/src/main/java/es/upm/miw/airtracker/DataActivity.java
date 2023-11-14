@@ -1,7 +1,10 @@
 package es.upm.miw.airtracker;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
@@ -11,9 +14,14 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import es.upm.miw.airtracker.api.AirQualityRESTAPIService;
 import es.upm.miw.airtracker.firebase.FirebaseClient;
@@ -30,15 +38,25 @@ public class DataActivity extends AppCompatActivity {
     private static final String API_BASE_URL = "https://api.weatherapi.com/";
     private static final String k = "0ed93a21f84e47b1a38203517230511";
     private static final String aqi = "no";
+    private EditText etNombreZona;
     private TextView tvResultado;
     private TextView tvSaved;
     private AirQualityRESTAPIService apiService;
     private FirebaseClient database;
+    private Boolean aprobedZoneNameToSave;
+
+    private SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_data);
+
+        preferences = getSharedPreferences("USER_INFO", MODE_PRIVATE);
+
+        aprobedZoneNameToSave = false;
+
+        listenChanguesOnEditText();
 
         this.tvResultado = findViewById(R.id.tvResult);
         this.tvSaved = findViewById(R.id.tvSaved);
@@ -60,14 +78,28 @@ public class DataActivity extends AppCompatActivity {
 
         Button favoritos = findViewById(R.id.btnSaveAsFavourite);
         favoritos.setOnClickListener(view -> {
-            startActivity(new Intent(DataActivity.this, FavouritesActivity.class));
-            Log.i(TAG, "[=>] Pantalla de favoritos");
+            if (!aprobedZoneNameToSave) {
+                String toastMessage = "";
+                if (etNombreZona.getText().toString() == "") {
+                    toastMessage = "Not zone provided";
+                } else {
+                    toastMessage = "You need to search a zone";
+                }
+                Toast.makeText(
+                        getApplicationContext(),
+                        toastMessage,
+                        Toast.LENGTH_LONG
+                ).show();
+                Log.i(TAG, toastMessage);
+            } else {
+                database.addFavouriteToUser(FirebaseAuth.getInstance().getCurrentUser().getUid(), etNombreZona.getText().toString());
+            }
         });
 
         Button getData = findViewById(R.id.btnGetData);
         getData.setOnClickListener(view -> {
 
-            EditText etNombreZona = findViewById(R.id.etNombreZona);
+            etNombreZona = findViewById(R.id.etNombreZona);
 
             Call<Weather> call_async = apiService.getZoneLocation(k, etNombreZona.getText().toString(), aqi);
 
@@ -84,6 +116,7 @@ public class DataActivity extends AppCompatActivity {
 
                         database.writeNewWeather(weather);
                         registerListeners(weather);
+                        aprobedZoneNameToSave = true;
                     } else {
                         tvResultado.setText("Pais no encontrado");
                     }
@@ -131,5 +164,22 @@ public class DataActivity extends AppCompatActivity {
         } catch (Exception e) {
             Log.i(TAG, e.getMessage());
         }
+    }
+
+    public void listenChanguesOnEditText() {
+        etNombreZona.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // No se usa
+            }
+            @Override
+            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+                aprobedZoneNameToSave = false;
+            }
+            @Override
+            public void afterTextChanged(Editable s) {
+                aprobedZoneNameToSave = false;
+            }
+        });
     }
 }
