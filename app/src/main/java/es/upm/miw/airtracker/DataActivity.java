@@ -1,5 +1,6 @@
 package es.upm.miw.airtracker;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -48,8 +49,7 @@ public class DataActivity extends AppCompatActivity {
     private AirQualityRESTAPIService apiService;
     private static final String FIREBASE_URL = "https://airtracker-d4e8e-default-rtdb.europe-west1.firebasedatabase.app";
 
-    private FirebaseDatabase database;
-    private DatabaseReference databaseReference;
+    private FirebaseClient database;
     private Integer n = 0;
 
     @Override
@@ -70,8 +70,7 @@ public class DataActivity extends AppCompatActivity {
         //     adapter.submitList(scores);
         // });
 
-        database = FirebaseDatabase.getInstance(FIREBASE_URL);
-        databaseReference = database.getReference("weather");
+        database = new FirebaseClient();
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(API_BASE_URL)
@@ -85,6 +84,12 @@ public class DataActivity extends AppCompatActivity {
 
         Button borrar = findViewById(R.id.btnClearData);
         borrar.setOnClickListener(view -> tvResultado.setText("Nada por ahora"));
+
+        Button favoritos = findViewById(R.id.btnSaveAsFavourite);
+        favoritos.setOnClickListener(view -> {
+            startActivity(new Intent(DataActivity.this, FavouritesActivity.class));
+            Log.i(TAG, "[=>] Pantalla de favoritos");
+        });
 
         Button getData = findViewById(R.id.btnGetData);
         getData.setOnClickListener(view -> {
@@ -104,8 +109,8 @@ public class DataActivity extends AppCompatActivity {
                         tvSaved.setText(weather.getLocation().getName() + ", " + weather.getLocation().getCountry() +
                                 "\n    Last: " + weather.getCurrent().getLastUpdated());
 
-                        databaseReference.child(weather.getLocation().getLocaltimeEpoch().toString()).setValue(weather);
-                        registerListeners(weather.getLocation().getLocaltimeEpoch().toString());
+                        database.writeNewWeather(weather);
+                        registerListeners(weather);
                     } else {
                         tvResultado.setText("Pais no encontrado");
                     }
@@ -128,7 +133,7 @@ public class DataActivity extends AppCompatActivity {
         });
     }
 
-    public void registerListeners(String entity) {
+    public void registerListeners(Weather weather) {
         ValueEventListener postListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -144,6 +149,14 @@ public class DataActivity extends AppCompatActivity {
                 Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
             }
         };
-        databaseReference.child(entity).addValueEventListener(postListener);
+
+        try {
+            database.getDatabaseRootReference().child("weather")
+                    .child(weather.getLocation().getName())
+                    .child(weather.getCurrent().getLastUpdated())
+                    .addValueEventListener(postListener);
+        } catch (Exception e) {
+            Log.i(TAG, e.getMessage());
+        }
     }
 }

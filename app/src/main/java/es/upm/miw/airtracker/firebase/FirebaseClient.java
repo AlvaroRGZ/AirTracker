@@ -3,12 +3,18 @@ package es.upm.miw.airtracker.firebase;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import es.upm.miw.airtracker.model.Weather;
 
@@ -18,36 +24,56 @@ public class FirebaseClient {
 
     private static final String FIREBASE_URL = "https://airtracker-d4e8e-default-rtdb.europe-west1.firebasedatabase.app";
 
-    private DatabaseReference database;
+    private FirebaseDatabase database;
+    private DatabaseReference databaseReference;
 
     public FirebaseClient() {
-        this.database = FirebaseDatabase.getInstance(FIREBASE_URL).getReference();
-
-        // Register all methods
-        ValueEventListener postListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Weather weather = dataSnapshot.getValue(Weather.class);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Getting Post failed, log a message
-                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
-            }
-        };
-        database.addValueEventListener(postListener);
+        this.database = FirebaseDatabase.getInstance(FIREBASE_URL);
+        databaseReference = this.database.getReference();
     }
 
-    public DatabaseReference getDatabaseReference() {
-        return database;
+    public DatabaseReference getDatabaseRootReference() {
+        return databaseReference;
     }
 
     public DatabaseReference getDatabaseReference(String entity) {
         return FirebaseDatabase.getInstance(FIREBASE_URL).getReference(entity);
     }
 
+    public LiveData<List<Weather>> getAllFavourites() {
+        MutableLiveData<List<Weather>> weathersLiveData = new MutableLiveData<>();
+        List<String> favourites = Arrays.asList("Madrid", "Salamanca", "Tenerife");
+        List<Weather> allWeathers = new ArrayList<>();
+
+        for (String favourite : favourites) {
+            databaseReference.child("weather").child(favourite).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    List<Weather> weathers = new ArrayList<>();
+                    for (DataSnapshot child : dataSnapshot.getChildren()) {
+                        weathers.add(child.getValue(Weather.class));
+                    }
+                    allWeathers.addAll(weathers);
+                    // Check if this is the last favorite before setting the value
+                    if (favourites.indexOf(favourite) == favourites.size() - 1) {
+                        weathersLiveData.setValue(allWeathers);
+                    }
+                }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    // Handling onCancelled
+                    Log.w(TAG, "Error retrieving favourite -> ", databaseError.toException());
+                }
+            });
+        }
+        return weathersLiveData;
+    }
+
     public void writeNewWeather(Weather weather) {
-        database.child("weather").child(weather.getCurrent().getLastUpdated()).setValue(weather);
+        databaseReference
+            .child("weather")
+                .child(weather.getLocation().getName())
+                    .child(weather.getCurrent().getLastUpdated())
+                        .setValue(weather);
     }
 }

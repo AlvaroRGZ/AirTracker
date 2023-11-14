@@ -26,6 +26,9 @@
         <activity android:name=".DataActivity"
             android:exported="true">
         </activity>
+        <activity android:name=".FavouritesActivity"
+            android:exported="true">
+        </activity>
     </application>
 
 </manifest>

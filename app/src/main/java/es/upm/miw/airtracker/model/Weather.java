@@ -6,6 +6,8 @@ import com.google.firebase.database.IgnoreExtraProperties;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Objects;
+
 @Generated("jsonschema2pojo")
 @IgnoreExtraProperties
 public class Weather {
@@ -35,6 +37,19 @@ public class Weather {
 
     public void setCurrent(Current current) {
         this.current = current;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Weather weather = (Weather) o;
+        return Objects.equals(location, weather.location) && Objects.equals(current, weather.current);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(location, current);
     }
 
     @Override

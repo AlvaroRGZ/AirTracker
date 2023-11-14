@@ -38,6 +38,10 @@ public class User {
         this.favouriteZones = favouriteZones;
     }
 
+    public void addFavouriteZone(String favouriteZone) {
+        this.favouriteZones.add(favouriteZone);
+    }
+
     @Override
     public String toString() {
         return "User{" +

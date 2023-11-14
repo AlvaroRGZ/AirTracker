@@ -3,6 +3,19 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="FirebaseUI">
         <!-- Customize your theme here. -->
+
+    </style>
+
+    <!-- Estilo personalizado para la caja -->
+    <style name="caja_datos">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_margin">5dp</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:background">@color/colorBlueLight</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:textSize">20dp</item>
+        <item name="android:topLeftRadius">20dp</item>
     </style>
 
 </resources>

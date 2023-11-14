@@ -3,4 +3,45 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <!-- Blanco y negro -->
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="colorBlack">#000000</color>
+
+    <!-- Rojo -->
+    <color name="colorRed">#FF0000</color>
+    <color name="colorRedLight">#FF5733</color>
+    <color name="colorRedDark">#C62828</color>
+
+    <!-- Naranja -->
+    <color name="colorOrange">#FFA500</color>
+    <color name="colorOrangeLight">#FFCA28</color>
+    <color name="colorOrangeDark">#FF6F00</color>
+
+    <!-- Amarillo -->
+    <color name="colorYellow">#FFFF00</color>
+    <color name="colorYellowLight">#FFFF72</color>
+    <color name="colorYellowDark">#FFD600</color>
+
+    <!-- Verde -->
+    <color name="colorGreen">#008000</color>
+    <color name="colorGreenLight">#4CAF50</color>
+    <color name="colorGreenDark">#388E3C</color>
+
+    <!-- Azul -->
+    <color name="colorBlue">#0000FF</color>
+    <color name="colorBlueLight">#64B5F6</color>
+    <color name="colorBlueDark">#1976D2</color>
+
+    <!-- Púrpura -->
+    <color name="colorPurple">#800080</color>
+    <color name="colorPurpleLight">#9C27B0</color>
+    <color name="colorPurpleDark">#7B1FA2</color>
+
+    <!-- Rosa -->
+    <color name="colorPink">#FFC0CB</color>
+    <color name="colorPinkLight">#FF4081</color>
+    <color name="colorPinkDark">#F50057</color>
+
+    <!-- Otros colores personalizados si es necesario -->
 </resources>

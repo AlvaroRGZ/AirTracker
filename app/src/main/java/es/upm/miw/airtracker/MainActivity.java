@@ -34,30 +34,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.logoutButton).setOnClickListener(this);
 
         mFirebaseAuth = FirebaseAuth.getInstance();
-        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    // user is signed in
-                    CharSequence username = user.getEmail();
-                    Toast.makeText(MainActivity.this, getString(R.string.firebase_user_fmt, username), Toast.LENGTH_LONG).show();
-                    Log.i(LOG_TAG, "onAuthStateChanged() " + getString(R.string.firebase_user_fmt, username));
-                    ((TextView) findViewById(R.id.textView)).setText(getString(R.string.firebase_user_fmt, username));
-                } else {
-                    // user is signed out
-                    startActivityForResult(
-                            // Get an instance of AuthUI based on the default app
-                            AuthUI.getInstance().
-                                    createSignInIntentBuilder().
-                                    setAvailableProviders(Arrays.asList(
-                                            new AuthUI.IdpConfig.GoogleBuilder().build(),
-                                            new AuthUI.IdpConfig.EmailBuilder().build()
-                                    )).
-                                    setIsSmartLockEnabled(!BuildConfig.DEBUG, true).
-                                    build(),
-                            RC_SIGN_IN);
-                }
+        mAuthStateListener = firebaseAuth -> {
+            FirebaseUser user = firebaseAuth.getCurrentUser();
+            if (user != null) {
+                // user is signed in
+                CharSequence username = user.getEmail();
+                Toast.makeText(MainActivity.this, getString(R.string.firebase_user_fmt, username), Toast.LENGTH_LONG).show();
+                Log.i(LOG_TAG, "onAuthStateChanged() " + getString(R.string.firebase_user_fmt, username));
+                ((TextView) findViewById(R.id.textView)).setText(getString(R.string.firebase_user_fmt, username));
+            } else {
+                // user is signed out
+                startActivityForResult(
+                        // Get an instance of AuthUI based on the default app
+                        AuthUI.getInstance().
+                                createSignInIntentBuilder().
+                                setAvailableProviders(Arrays.asList(
+                                        new AuthUI.IdpConfig.GoogleBuilder().build(),
+                                        new AuthUI.IdpConfig.EmailBuilder().build()
+                                )).
+                                setIsSmartLockEnabled(!BuildConfig.DEBUG, true).
+                                build(),
+                        RC_SIGN_IN);
             }
         };
     }
@@ -98,6 +95,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         startActivity(new Intent(MainActivity.this, DataActivity.class));
         Log.i(LOG_TAG, "[=>] Pantalla de datos");
+    }
+
+    public void goToFavourites() {
+        startActivity(new Intent(MainActivity.this, FavouritesActivity.class));
+        Log.i(LOG_TAG, "[=>] Pantalla de favoritos");
     }
 
 }
