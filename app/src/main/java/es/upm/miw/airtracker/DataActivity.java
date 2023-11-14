@@ -9,21 +9,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.firebase.Firebase;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import java.util.UUID;
 
 import es.upm.miw.airtracker.api.AirQualityRESTAPIService;
 import es.upm.miw.airtracker.firebase.FirebaseClient;
-import es.upm.miw.airtracker.model.Condition;
 import es.upm.miw.airtracker.model.Weather;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -31,15 +24,8 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-// import androidx.recyclerview.widget.LinearLayoutManager;
-// import androidx.recyclerview.widget.RecyclerView;
-
-// import es.upm.miw.bantumi.dialog.DeleteScoresDialog;
-// import es.upm.miw.bantumi.view.ScoreListAdapter;
-// import es.upm.miw.bantumi.view.ScoreViewModel;
 
 public class DataActivity extends AppCompatActivity {
-    // private ScoreViewModel mScoreViewModel;
     private static final String TAG = "DATA";
     private static final String API_BASE_URL = "https://api.weatherapi.com/";
     private static final String k = "0ed93a21f84e47b1a38203517230511";
@@ -47,10 +33,7 @@ public class DataActivity extends AppCompatActivity {
     private TextView tvResultado;
     private TextView tvSaved;
     private AirQualityRESTAPIService apiService;
-    private static final String FIREBASE_URL = "https://airtracker-d4e8e-default-rtdb.europe-west1.firebasedatabase.app";
-
     private FirebaseClient database;
-    private Integer n = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,16 +42,6 @@ public class DataActivity extends AppCompatActivity {
 
         this.tvResultado = findViewById(R.id.tvResult);
         this.tvSaved = findViewById(R.id.tvSaved);
-
-        // RecyclerView recyclerView = findViewById(R.id.recyclerview);
-        // final ScoreListAdapter adapter = new ScoreListAdapter(new ScoreListAdapter.ScoreDiff());
-        // recyclerView.setAdapter(adapter);
-        // recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        // mScoreViewModel = new ViewModelProvider(this).get(ScoreViewModel.class);
-        // mScoreViewModel.getAllScores().observe(this, scores -> {
-        //     adapter.submitList(scores);
-        // });
 
         database = new FirebaseClient();
 

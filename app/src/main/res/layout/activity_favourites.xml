@@ -60,17 +60,35 @@
             </TextView>
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/tvTituloFavoritos"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:orientation="horizontal"
             android:layout_weight="1"
-            android:gravity="center"
-            android:textStyle="bold"
-            android:textColor="@color/cardview_light_background"
-            android:textSize="20dp"
-            android:text="Zonas favoritas"
-            android:background="@color/colorBlue"/>
+            android:weightSum="9"
+            android:background="@color/colorBlue"
+            >
+
+            <TextView
+                android:id="@+id/tvTituloFavoritos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:gravity="center"
+                android:text="Zonas favoritas"
+                android:textColor="@color/cardview_light_background"
+                android:textSize="20dp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btnAddFavourites"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="7"
+                android:text="+"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="10dp"/>
+        </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerview"

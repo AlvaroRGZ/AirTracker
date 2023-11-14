@@ -14,6 +14,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import es.upm.miw.airtracker.model.Weather;
@@ -52,8 +54,12 @@ public class FirebaseClient {
                     List<Weather> weathers = new ArrayList<>();
                     for (DataSnapshot child : dataSnapshot.getChildren()) {
                         weathers.add(child.getValue(Weather.class));
+                        // Ordena los registros por orden cronológico
+                        Collections.sort(weathers, Comparator.comparing(w -> w.getCurrent().getLastUpdated()));
                     }
-                    allWeathers.addAll(weathers);
+                    // Elige el más reciente
+                    allWeathers.add(weathers.get(weathers.size() - 1));
+
                     // Check if this is the last favorite before setting the value
                     if (favourites.indexOf(favourite) == favourites.size() - 1) {
                         weathersLiveData.setValue(allWeathers);

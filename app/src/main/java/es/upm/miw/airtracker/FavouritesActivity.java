@@ -1,6 +1,8 @@
 package es.upm.miw.airtracker;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -30,6 +32,12 @@ public class FavouritesActivity extends AppCompatActivity {
         weatherViewModel = new ViewModelProvider(this).get(WeatherViewModel.class);
         weatherViewModel.getAllFavourites().observe(this, favourites -> {
             adapter.submitList(favourites);
+        });
+
+        Button añadirFavoritos = findViewById(R.id.btnAddFavourites);
+        añadirFavoritos.setOnClickListener(view -> {
+            startActivity(new Intent(FavouritesActivity.this, DataActivity.class));
+            Log.i(TAG, "[=>] Pantalla de datos");
         });
 
         Button atras = findViewById(R.id.btnFinish);

@@ -42,6 +42,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Toast.makeText(MainActivity.this, getString(R.string.firebase_user_fmt, username), Toast.LENGTH_LONG).show();
                 Log.i(LOG_TAG, "onAuthStateChanged() " + getString(R.string.firebase_user_fmt, username));
                 ((TextView) findViewById(R.id.textView)).setText(getString(R.string.firebase_user_fmt, username));
+
+                startActivity(new Intent(MainActivity.this, FavouritesActivity.class));
+                Log.i(LOG_TAG, "[=>] Pantalla de favoritos");
             } else {
                 // user is signed out
                 startActivityForResult(
@@ -78,6 +81,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (resultCode == RESULT_OK) {
                 Toast.makeText(this, R.string.signed_in, Toast.LENGTH_SHORT).show();
                 Log.i(LOG_TAG, "onActivityResult " + getString(R.string.signed_in));
+
+                startActivity(new Intent(MainActivity.this, FavouritesActivity.class));
+                Log.i(LOG_TAG, "[=>] Pantalla de favoritos");
             } else if (resultCode == RESULT_CANCELED) {
                 Toast.makeText(this, R.string.signed_cancelled, Toast.LENGTH_SHORT).show();
                 Log.i(LOG_TAG, "onActivityResult " + getString(R.string.signed_cancelled));
