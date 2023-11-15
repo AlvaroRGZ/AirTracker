@@ -146,4 +146,24 @@ public class FirebaseClient {
             }
         });
     }
+
+    public void removeFavouriteToUser(String uid, String favourite) {
+        databaseReference.child("user").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+                user.removeFavouriteZone(favourite);
+                databaseReference
+                        .child("user")
+                        .child(user.getUid())
+                        .setValue(user);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Handling onCancelled
+                Log.w("f", "Error retrieving user -> ", databaseError.toException());
+            }
+        });
+    }
 }

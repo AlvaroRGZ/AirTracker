@@ -86,6 +86,7 @@ public class FavouritesActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        refreshFavouriteData();
         createRecycler();
     }
 
@@ -122,9 +123,7 @@ public class FavouritesActivity extends AppCompatActivity {
                                 if (favourites.indexOf(favourite) == favourites.size() - 1) {
                                     adapter.submitList(allWeathers);
                                 }
-
                             }
-
                             @Override
                             public void onCancelled(DatabaseError databaseError) {
                                 // Handling onCancelled
@@ -152,14 +151,14 @@ public class FavouritesActivity extends AppCompatActivity {
                 User user = dataSnapshot.getValue(User.class);
                 if (user != null) {
                     List<String> favourites = user.getFavouriteZones();
-
+                    Log.i(TAG, favourites.toString());
                     for (String favourite : favourites) {
                         Call<Weather> call_async = apiService.getZoneLocation(k, favourite, aqi);
-
                         call_async.enqueue(new Callback<Weather>() {
                             @Override
                             public void onResponse(Call<Weather> call, Response<Weather> response) {
                                 Weather weather = response.body();
+                                Log.i(TAG, weather.toString());
                                 if (null != weather) {
                                     firebaseClient.writeNewWeather(weather);
                                 }

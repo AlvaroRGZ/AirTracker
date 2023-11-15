@@ -59,6 +59,12 @@ public class User {
         }
     }
 
+    public void removeFavouriteZone(String favouriteZone) {
+        if (!this.favouriteZones.contains(favouriteZone)) {
+            this.favouriteZones.remove(favouriteZone);
+        }
+    }
+
     @Override
     public String toString() {
         return "User{" +
