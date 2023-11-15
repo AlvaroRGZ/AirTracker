@@ -39,8 +39,8 @@ En esta pantalla aparecen tres botones:
   <img src="./imgs/favoritos_refresh.jpg" width="200" height="350">
   
 * Botón *+*: Navega a la pantalla para añadir una nueva zona preferida.
-  <img src="./imgs/buscar_vacio.jpg" width="200" height="350"><img src="./imgs/buscar_resultado.jpg" width="200" height="350"><img src="./imgs/buscar_añadido.jpg" width="200" height="350">
-  
+  <img src="./imgs/buscar_vacio.jpg" width="200" height="350">   <img src="./imgs/buscar_resultado.jpg" width="200" height="350">   <img src="./imgs/buscar_añadido.jpg" width="200" height="350">
+  ***
 * *Icono del clima*: al pinchar sobre él, se navega a una pantalla donde se podrán ver todos
   los registros obtenidos de la zona.
   <img src="./imgs/registros_madrid.jpg" width="200" height="350">
