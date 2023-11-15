@@ -50,6 +50,7 @@ public class FavouriteViewHolder extends RecyclerView.ViewHolder {
                     .centerCrop()
                     .into(navigateButton);
         }
+
         navigateButton.setOnClickListener(view -> {
             Intent detalles = new Intent(itemView.getContext(), WeatherActivity.class);
             Bundle bundle = new Bundle();

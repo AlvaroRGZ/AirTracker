@@ -57,12 +57,10 @@ public class DataActivity extends AppCompatActivity {
         listenChanguesOnEditText();
 
         this.tvResultado = findViewById(R.id.tvResult);
-        this.tvSaved = findViewById(R.id.tvSaved);
 
         database = new FirebaseClient();
         database.setCurrentUserUID(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
-        Log.i(TAG, "[ANTEs] add");
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(API_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -82,12 +80,9 @@ public class DataActivity extends AppCompatActivity {
                 } else {
                     toastMessage = "Debes buscar la zona";
                 }
-                Log.i(TAG, toastMessage);
             } else {
-                Log.i(TAG, "[ANTEs] add");
                 database.addFavouriteToUser(FirebaseAuth.getInstance().getCurrentUser().getUid(), lastNameCalled);
                 toastMessage = lastNameCalled + " añadido a favoritos";
-                Log.i(TAG, "[DESPUES] add");
             }
             Toast.makeText(
                     getApplicationContext(),
@@ -110,9 +105,6 @@ public class DataActivity extends AppCompatActivity {
                         tvResultado.setText(weather.getLocation().getName() + ", " + weather.getLocation().getCountry() +
                                 "\n    Last: " + weather.getCurrent().getLastUpdated());
 
-                        tvSaved.setText(weather.getLocation().getName() + ", " + weather.getLocation().getCountry() +
-                                "\n    Last: " + weather.getCurrent().getLastUpdated());
-
                         database.writeNewWeather(weather);
                         registerListeners(weather);
                         aprobedZoneNameToSave = true;
@@ -122,10 +114,6 @@ public class DataActivity extends AppCompatActivity {
                     }
                 }
 
-                /**
-                 * Invoked when a network exception occurred talking to the server or when an unexpected
-                 * exception occurred creating the request or processing the response.
-                 */
                 @Override
                 public void onFailure(Call<Weather> call, Throwable t) {
                     Toast.makeText(
@@ -145,13 +133,10 @@ public class DataActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.i(TAG, dataSnapshot.toString());
                 Weather weather = dataSnapshot.getValue(Weather.class);
-                tvSaved.setText(weather.getLocation().getName() + ", " + weather.getLocation().getCountry() +
-                        "\n    Last: " + weather.getCurrent().getLastUpdated());
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                // Getting Post failed, log a message
                 Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
             }
         };

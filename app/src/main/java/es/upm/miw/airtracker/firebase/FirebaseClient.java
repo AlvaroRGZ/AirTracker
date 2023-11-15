@@ -48,10 +48,11 @@ public class FirebaseClient {
         this.currentUserUID = currentUserUID;
     }
 
+    // La mayor intencion del codigo fue intentar hacer un wrapper de la base de datos para hacer peticiones asincronas
+    // pero se dejó en deshuso debido a la complejidad con callbacks, por ello se repite tanto codigo
     public LiveData<List<Weather>> getAllFavourites() {
         MutableLiveData<List<Weather>> weathersLiveData = new MutableLiveData<>();
         getUserByUID(currentUserUID);
-        Log.i("f", "Salgo de getUserByUID");
         List<Weather> allWeathers = new ArrayList<>();
         for (String favourite : favourites) {
             databaseReference.child("weather").child(favourite).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -66,7 +67,7 @@ public class FirebaseClient {
                     // Elige el más reciente
                     allWeathers.add(weathers.get(weathers.size() - 1));
 
-                    // Check if this is the last favorite before setting the value
+                    // Actualiza cuando se han obtenido todos los paises de la lista
                     if (favourites.indexOf(favourite) == favourites.size() - 1) {
                         weathersLiveData.setValue(allWeathers);
                     }
@@ -74,7 +75,6 @@ public class FirebaseClient {
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
-                    // Handling onCancelled
                     Log.w(TAG, "Error retrieving favourite -> ", databaseError.toException());
                 }
             });
@@ -83,28 +83,21 @@ public class FirebaseClient {
     }
 
     public void getUserByUID(String userUID) {
-        Log.i("f", "Dentro de getUserByUID" + userUID);
         databaseReference.child("user").child(userUID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.i("f", "Dentro de listener");
                 User user = dataSnapshot.getValue(User.class);
                 favourites = user.getFavouriteZones();
-                Log.i("f", user.getFavouriteZones().toString());
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                // Handling onCancelled
                 Log.w("f", "Error retrieving user -> ", databaseError.toException());
             }
         });
-        Log.i("f", "final de getUserByUID" + userUID);
-        // return userData;
     }
 
     public User getActiveUser(String userUID) {
-        Log.i("DATOS", databaseReference.child("user").child(userUID).get().getResult().getValue(User.class).toString());
         return databaseReference.child("user").child(userUID).get().getResult().getValue(User.class);
     }
 
@@ -142,7 +135,6 @@ public class FirebaseClient {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                // Handling onCancelled
                 Log.w("f", "Error retrieving user -> ", databaseError.toException());
             }
         });
