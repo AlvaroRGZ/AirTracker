@@ -13,6 +13,11 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+
 import es.upm.miw.airtracker.DataActivity;
 import es.upm.miw.airtracker.FavouriteZoneActivity;
 import es.upm.miw.airtracker.FavouritesActivity;
@@ -38,7 +43,7 @@ public class WeatherViewHolder extends RecyclerView.ViewHolder {
     public void bind(Weather weather) {
         zone.setText(weather.getLocation().getName());
         country.setText(weather.getLocation().getCountry());
-        lastUpdated.setText(weather.getCurrent().getLastUpdated());
+        lastUpdated.setText(formatDateString(weather.getCurrent().getLastUpdated()));
         temperature.setText(weather.getCurrent().getTempC().toString() + "º");
 
         navigateButton.setOnClickListener(view -> {
@@ -55,5 +60,30 @@ public class WeatherViewHolder extends RecyclerView.ViewHolder {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.recyclerview_zone_data, parent, false);
         return new WeatherViewHolder(view);
+    }
+
+    public static String formatDateString(String inputDate) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
+
+        try {
+            Date date = sdf.parse(inputDate);
+            Date currentDate = new Date();
+
+            long diffInMillis = currentDate.getTime() - date.getTime();
+            long diffInDays = diffInMillis / (24 * 60 * 60 * 1000);
+            SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+            if (diffInDays == 0) {
+                return "Hoy, " + timeFormat.format(date);
+            } else if (diffInDays == 1) {
+
+                return "Ayer, " + timeFormat.format(date);
+            } else {
+                return "Hace " + diffInDays + " dias, " + timeFormat.format(date);
+            }
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return "Error al procesar la fecha";
+        }
     }
 }

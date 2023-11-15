@@ -119,7 +119,6 @@ public class FavouriteZoneActivity extends AppCompatActivity {
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                // Handling onCancelled
                 Log.w("f", "Error retrieving favourite -> ", databaseError.toException());
             }
         });
