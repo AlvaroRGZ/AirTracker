@@ -1,5 +1,6 @@
 package es.upm.miw.airtracker.model;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class User {
@@ -8,6 +9,10 @@ public class User {
     private String email;
 
     private List<String> favouriteZones;
+
+    public User () {
+
+    }
 
     public User(String uid, String name, String email, List<String> favouriteZones) {
         this.uid = uid;
@@ -49,7 +54,9 @@ public class User {
     }
 
     public void addFavouriteZone(String favouriteZone) {
-        this.favouriteZones.add(favouriteZone);
+        if (!this.favouriteZones.contains(favouriteZone)) {
+            this.favouriteZones.add(favouriteZone);
+        }
     }
 
     @Override

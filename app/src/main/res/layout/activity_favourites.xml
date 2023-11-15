@@ -98,10 +98,10 @@
             android:layout_weight="5"/>
 
         <Button
-            android:id="@+id/btnFinish"
+            android:id="@+id/btnFefresh"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Atras"/>
+            android:text="refresh"/>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

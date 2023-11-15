@@ -1,9 +1,12 @@
 package es.upm.miw.airtracker.view;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.List;
 
@@ -19,7 +22,10 @@ public class WeatherViewModel extends AndroidViewModel {
     public WeatherViewModel(Application application) {
         super(application);
         firebaseClient = new FirebaseClient();
+        firebaseClient.setCurrentUserUID(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        Log.i("f", "Voy a entrar a getAllFavourites");
         favourites = firebaseClient.getAllFavourites();
+        Log.i("f", "Salgo de getAllFavourites");
     }
 
     public LiveData<List<Weather>> getAllFavourites() {

@@ -44,25 +44,25 @@ public class DataActivity extends AppCompatActivity {
     private AirQualityRESTAPIService apiService;
     private FirebaseClient database;
     private Boolean aprobedZoneNameToSave;
-
-    private SharedPreferences preferences;
+    private String lastNameCalled;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_data);
 
-        preferences = getSharedPreferences("USER_INFO", MODE_PRIVATE);
-
         aprobedZoneNameToSave = false;
 
+        etNombreZona = findViewById(R.id.etNombreZona);
         listenChanguesOnEditText();
 
         this.tvResultado = findViewById(R.id.tvResult);
         this.tvSaved = findViewById(R.id.tvSaved);
 
         database = new FirebaseClient();
+        database.setCurrentUserUID(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
+        Log.i(TAG, "[ANTEs] add");
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(API_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -75,7 +75,7 @@ public class DataActivity extends AppCompatActivity {
 
         Button borrar = findViewById(R.id.btnClearData);
         borrar.setOnClickListener(view -> tvResultado.setText("Nada por ahora"));
-
+        Log.i(TAG, "[ANTEs] listeners");
         Button favoritos = findViewById(R.id.btnSaveAsFavourite);
         favoritos.setOnClickListener(view -> {
             if (!aprobedZoneNameToSave) {
@@ -92,14 +92,14 @@ public class DataActivity extends AppCompatActivity {
                 ).show();
                 Log.i(TAG, toastMessage);
             } else {
-                database.addFavouriteToUser(FirebaseAuth.getInstance().getCurrentUser().getUid(), etNombreZona.getText().toString());
+                Log.i(TAG, "[ANTEs] add");
+                database.addFavouriteToUser(FirebaseAuth.getInstance().getCurrentUser().getUid(), lastNameCalled);
+                Log.i(TAG, "[DESPUES] add");
             }
         });
 
         Button getData = findViewById(R.id.btnGetData);
         getData.setOnClickListener(view -> {
-
-            etNombreZona = findViewById(R.id.etNombreZona);
 
             Call<Weather> call_async = apiService.getZoneLocation(k, etNombreZona.getText().toString(), aqi);
 
@@ -117,6 +117,7 @@ public class DataActivity extends AppCompatActivity {
                         database.writeNewWeather(weather);
                         registerListeners(weather);
                         aprobedZoneNameToSave = true;
+                        lastNameCalled = weather.getLocation().getName();
                     } else {
                         tvResultado.setText("Pais no encontrado");
                     }
