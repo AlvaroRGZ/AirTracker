@@ -10,6 +10,12 @@ con los datos obtenidos en su último reporte.
 
 * [Enlace al video de YouTube](https://www.youtube.com/watch?v=roDhwJLTDX8)
 
+### Obervaciones
+Al comienzo del proyecto, la idea principal era realizar clases `wrapper` tanto de las llamadas a la API, como
+para el cliente de la base de datos. Tras intentar realizar esta arquitectura mediante callbacks con algunos
+impedimentos, se optó por realizar las peticiones en cada una de las actividades. Cabe destacar que se suben los
+ficheros que contienen los datos de la conexión a Firebase y las claves para la conexion con la API.
+
 ## Tecnologías
 ### Obtención de datos
 Estos datos temporales han sido obtenidos mediante el uso de la API ofrecida por:
