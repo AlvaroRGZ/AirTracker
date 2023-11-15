@@ -1,7 +1,6 @@
 package es.upm.miw.airtracker;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -10,7 +9,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -26,10 +24,11 @@ import java.util.List;
 
 import es.upm.miw.airtracker.api.AirQualityRESTAPIService;
 import es.upm.miw.airtracker.firebase.FirebaseClient;
+import es.upm.miw.airtracker.model.Favourite;
 import es.upm.miw.airtracker.model.User;
 import es.upm.miw.airtracker.model.Weather;
-import es.upm.miw.airtracker.view.WeatherListAdapter;
-import es.upm.miw.airtracker.view.WeatherViewModel;
+import es.upm.miw.airtracker.view.favourite.FavouriteListAdapter;
+import es.upm.miw.airtracker.view.weather.WeatherListAdapter;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -38,7 +37,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class FavouritesActivity extends AppCompatActivity {
-    // private ScoreViewModel mScoreViewModel;
     private static final String TAG = "DATA";
 
     private FirebaseClient firebaseClient;
@@ -92,10 +90,10 @@ public class FavouritesActivity extends AppCompatActivity {
 
     protected void createRecycler() {
         RecyclerView recyclerView = findViewById(R.id.recyclerview);
-        final WeatherListAdapter adapter = new WeatherListAdapter(new WeatherListAdapter.WeatherDiff());
+        final FavouriteListAdapter adapter = new FavouriteListAdapter(new FavouriteListAdapter.FavouriteDiff());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
+        MutableLiveData<List<Favourite>> favouritesLiveData = new MutableLiveData<>();
         String userUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         firebaseClient.getDatabaseReference("user").child(userUID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -103,35 +101,40 @@ public class FavouritesActivity extends AppCompatActivity {
                 User user = dataSnapshot.getValue(User.class);
                 if (user != null) {
                     List<String> favourites = user.getFavouriteZones();
+                    if (!favourites.isEmpty()) {
+                        //MutableLiveData<List<Favourite>> favouritesLiveData = new MutableLiveData<>();
+                        List<Favourite> allfavourites = new ArrayList<>();
+                        //Log.i("foo", favourites.toString());
+                        for (String favourite : favourites) {
+                            firebaseClient.getDatabaseReference("weather").child(favourite).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    List<Favourite> collectedFavourites = new ArrayList<>();
+                                    for (DataSnapshot child : dataSnapshot.getChildren()) {
+                                        collectedFavourites.add(new Favourite(child.getValue(Weather.class)));
+                                    }
+                                    // Ordena los registros por orden cronológico
+                                    Collections.sort(collectedFavourites, Comparator.comparing(w -> w.getDate()));
+                                    // Elige el más reciente
+                                    allfavourites.add(collectedFavourites.get(collectedFavourites.size() - 1));
 
-                    MutableLiveData<List<Weather>> weathersLiveData = new MutableLiveData<>();
-                    List<Weather> allWeathers = new ArrayList<>();
-                    for (String favourite : favourites) {
-                        firebaseClient.getDatabaseReference("weather").child(favourite).addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                List<Weather> weathers = new ArrayList<>();
-                                for (DataSnapshot child : dataSnapshot.getChildren()) {
-                                    weathers.add(child.getValue(Weather.class));
+                                    // Check if this is the last favorite before setting the value
+                                    if (allfavourites.size() == favourites.size()) {
+                                        Log.i("foo", allfavourites.toString());
+                                        adapter.submitList(allfavourites);
+                                    }
                                 }
-                                // Ordena los registros por orden cronológico
-                                Collections.sort(weathers, Comparator.comparing(w -> w.getCurrent().getLastUpdated()));
-                                // Elige el más reciente
-                                allWeathers.add(weathers.get(weathers.size() - 1));
 
-                                // Check if this is the last favorite before setting the value
-                                if (favourites.indexOf(favourite) == favourites.size() - 1) {
-                                    adapter.submitList(allWeathers);
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+                                    // Handling onCancelled
+                                    Log.w("f", "Error retrieving favourite -> ", databaseError.toException());
                                 }
-                            }
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-                                // Handling onCancelled
-                                Log.w("f", "Error retrieving favourite -> ", databaseError.toException());
-                            }
-                        });
+                            });
+                        }
+                    } else {
+                        adapter.submitList(new ArrayList<>());
                     }
-                    adapter.submitList(weathersLiveData.getValue());
                 }
             }
 
@@ -152,27 +155,30 @@ public class FavouritesActivity extends AppCompatActivity {
                 if (user != null) {
                     List<String> favourites = user.getFavouriteZones();
                     Log.i(TAG, favourites.toString());
-                    for (String favourite : favourites) {
-                        Call<Weather> call_async = apiService.getZoneLocation(k, favourite, aqi);
-                        call_async.enqueue(new Callback<Weather>() {
-                            @Override
-                            public void onResponse(Call<Weather> call, Response<Weather> response) {
-                                Weather weather = response.body();
-                                Log.i(TAG, weather.toString());
-                                if (null != weather) {
-                                    firebaseClient.writeNewWeather(weather);
+                    if (!favourites.isEmpty()) {
+                        for (String favourite : favourites) {
+                            Call<Weather> call_async = apiService.getZoneLocation(k, favourite, aqi);
+                            call_async.enqueue(new Callback<Weather>() {
+                                @Override
+                                public void onResponse(Call<Weather> call, Response<Weather> response) {
+                                    Weather weather = response.body();
+                                    Log.i(TAG, weather.toString());
+                                    if (null != weather) {
+                                        firebaseClient.writeNewWeather(weather);
+                                    }
                                 }
-                            }
-                            @Override
-                            public void onFailure(Call<Weather> call, Throwable t) {
-                                Toast.makeText(
-                                        getApplicationContext(),
-                                        "ERROR: " + t.getMessage(),
-                                        Toast.LENGTH_LONG
-                                ).show();
-                                Log.i("error", t.getMessage());
-                            }
-                        });
+
+                                @Override
+                                public void onFailure(Call<Weather> call, Throwable t) {
+                                    Toast.makeText(
+                                            getApplicationContext(),
+                                            "ERROR: " + t.getMessage(),
+                                            Toast.LENGTH_LONG
+                                    ).show();
+                                    Log.i("error", t.getMessage());
+                                }
+                            });
+                        }
                     }
                 }
             }

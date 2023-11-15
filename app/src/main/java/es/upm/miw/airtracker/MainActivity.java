@@ -121,13 +121,4 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         startActivity(new Intent(MainActivity.this, FavouritesActivity.class));
         Log.i(LOG_TAG, "[=>] Pantalla de favoritos");
     }
-
-    private void guardarDatosEmail(String email) {
-        // Guardar nombre de usuario en las preferencias
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString("USER_EMAIL", email.toString());
-        editor.putString("USER_NAME", email.substring(0, email.indexOf('@')));
-        editor.putStringSet("USER_FAVOURITES_SET", new HashSet<>());
-        editor.apply();
-    }
 }

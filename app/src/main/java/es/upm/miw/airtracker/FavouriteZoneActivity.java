@@ -1,7 +1,5 @@
 package es.upm.miw.airtracker;
 
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -10,7 +8,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -26,10 +23,8 @@ import java.util.List;
 
 import es.upm.miw.airtracker.api.AirQualityRESTAPIService;
 import es.upm.miw.airtracker.firebase.FirebaseClient;
-import es.upm.miw.airtracker.model.User;
 import es.upm.miw.airtracker.model.Weather;
-import es.upm.miw.airtracker.view.WeatherListAdapter;
-import es.upm.miw.airtracker.view.WeatherViewModel;
+import es.upm.miw.airtracker.view.weather.WeatherListAdapter;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

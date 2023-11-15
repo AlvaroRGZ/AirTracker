@@ -1,4 +1,4 @@
-package es.upm.miw.airtracker.view;
+package es.upm.miw.airtracker.view.weather;
 
 import android.view.ViewGroup;
 
