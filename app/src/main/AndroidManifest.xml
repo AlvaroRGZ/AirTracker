@@ -29,7 +29,7 @@
         <activity android:name=".FavouritesActivity"
             android:exported="true">
         </activity>
-        <activity android:name=".FavouriteZoneActivity"
+        <activity android:name=".WeatherActivity"
             android:exported="true">
         </activity>
     </application>

@@ -32,8 +32,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 
-public class FavouriteZoneActivity extends AppCompatActivity {
-    // private ScoreViewModel mScoreViewModel;
+public class WeatherActivity extends AppCompatActivity {
     private static final String TAG = "DATA";
 
     private FirebaseClient firebaseClient;
@@ -49,13 +48,11 @@ public class FavouriteZoneActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_favourite_data);
-        Log.i("q", "Estoy aqui 1");
+        setContentView(R.layout.activity_weather);
         //Obtenemos el nombre de la zona que se ha pulsado
         Bundle bundle = getIntent().getExtras();
-        Log.i("q", "Estoy aqui 2");
         zoneName = bundle.getString("zone", "Madrid");
-        Log.i("q", "Estoy aqui 3");
+
 
         firebaseClient = new FirebaseClient();
         firebaseClient.setCurrentUserUID(FirebaseAuth.getInstance().getCurrentUser().getUid());
@@ -83,6 +80,7 @@ public class FavouriteZoneActivity extends AppCompatActivity {
         btnBack.setOnClickListener(view -> {
             finish();
         });
+
     }
 
     @Override
@@ -117,7 +115,6 @@ public class FavouriteZoneActivity extends AppCompatActivity {
                 Log.w("f", "Error retrieving favourite -> ", databaseError.toException());
             }
         });
-        adapter.submitList(weathersLiveData.getValue());
     }
 
     public void refreshFavouriteData() {
@@ -126,11 +123,14 @@ public class FavouriteZoneActivity extends AppCompatActivity {
         call_async.enqueue(new Callback<Weather>() {
             @Override
             public void onResponse(Call<Weather> call, Response<Weather> response) {
+                Log.i("q", "responde" );
                 Weather weather = response.body();
-                Log.i(TAG, weather.toString());
+                Log.i("q", weather.toString());
                 if (null != weather) {
+                    Log.i("q", "si guardo = " );
                     firebaseClient.writeNewWeather(weather);
                 }
+                Log.i("q", "no guardo = " );
             }
             @Override
             public void onFailure(Call<Weather> call, Throwable t) {
@@ -139,10 +139,8 @@ public class FavouriteZoneActivity extends AppCompatActivity {
                         "ERROR: " + t.getMessage(),
                         Toast.LENGTH_LONG
                 ).show();
-                Log.i("error", t.getMessage());
+                Log.i("q", t.getMessage());
             }
         });
-
     }
-
 }

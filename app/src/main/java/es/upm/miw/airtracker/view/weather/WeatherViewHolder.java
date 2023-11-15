@@ -1,8 +1,5 @@
 package es.upm.miw.airtracker.view.weather;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +13,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-import es.upm.miw.airtracker.FavouriteZoneActivity;
 import es.upm.miw.airtracker.R;
 import es.upm.miw.airtracker.model.Weather;
 
@@ -41,15 +37,6 @@ public class WeatherViewHolder extends RecyclerView.ViewHolder {
         country.setText(weather.getLocation().getCountry());
         lastUpdated.setText(formatDateString(weather.getCurrent().getLastUpdated()));
         temperature.setText(weather.getCurrent().getTempC().toString() + "º");
-
-        navigateButton.setOnClickListener(view -> {
-            Intent detalles = new Intent(itemView.getContext(), FavouriteZoneActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putString("zone", weather.getLocation().getName());
-            detalles.putExtras(bundle);
-            itemView.getContext().startActivity(detalles);
-            Log.i("VH", "[=>] Pantalla de detalles");
-        });
     }
 
     static WeatherViewHolder create(ViewGroup parent) {

@@ -16,7 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import es.upm.miw.airtracker.FavouriteZoneActivity;
+import es.upm.miw.airtracker.WeatherActivity;
 import es.upm.miw.airtracker.R;
 import es.upm.miw.airtracker.model.Favourite;
 
@@ -41,9 +41,12 @@ public class FavouriteViewHolder extends RecyclerView.ViewHolder {
         country.setText(favourite.getCountry());
         lastUpdated.setText(formatDateString(favourite.getDate()));
         temperature.setText(favourite.getTemperature());
-
+        String iconUrl = favourite.getImage();
+        if (iconUrl != null && !iconUrl.isEmpty()) {
+            //Picasso.get().load(iconUrl).into(navigateButton);
+        }
         navigateButton.setOnClickListener(view -> {
-            Intent detalles = new Intent(itemView.getContext(), FavouriteZoneActivity.class);
+            Intent detalles = new Intent(itemView.getContext(), WeatherActivity.class);
             Bundle bundle = new Bundle();
             bundle.putString("zone", favourite.getName());
             bundle.putString("country", favourite.getCountry());
