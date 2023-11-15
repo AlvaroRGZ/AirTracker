@@ -14,6 +14,7 @@ Estos datos temporales han sido obtenidos mediante el uso de la API ofrecida por
  * [Air Quality Programmatic APIs](https://aqicn.org/api/es/)
 Para realizar peticiones a esta interfaz se ha hecho uso de la librería `Retrofit`.
 
+También se ha hecho uso de la librería `Picasso` para obtener las imagenes asociadas a dichos registros.
 
 ### Almacenamiento de información en la nube
 Además, para almacenar todos los datos obtenidos de estas peticiones y las preferencias de cada usuario
