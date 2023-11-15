@@ -28,4 +28,4 @@ se han empleado las prestaciones de `Google Firebase` para implementar los servi
 En este apartado se muestra una breve visualización de las diferentes pantallas.
 ### Pantalla principal
 En ella se muestran las zonas favoritas del usuario con sus últimos datos.
-<img src="./imgs/favoritos.jpg" width="100" height="350">
+<img src="./imgs/favoritos.jpg" width="350" height="350">
