@@ -16,18 +16,18 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:orientation="horizontal"
-            android:layout_weight="3"
+            android:layout_weight="2"
             android:weightSum="8">
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:layout_weight="5"
+                android:layout_weight="3"
                 android:weightSum="6">
                 <TextView
                     android:id="@+id/tvTextoSaludo"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="0dp"
                     android:layout_weight="4"
                     android:gravity="center"
                     android:textStyle="bold"
@@ -37,7 +37,7 @@
                 <TextView
                     android:id="@+id/tvNombreUsuario"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="0dp"
                     android:layout_weight="2"
                     android:gravity="center"
                     android:textStyle="bold"
@@ -47,9 +47,9 @@
             </LinearLayout>
             <TextView
                 android:id="@+id/tvDatosLocal"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="3"
+                android:layout_weight="5"
                 android:gravity="center"
                 android:textStyle="bold"
                 android:textSize="20dp"
@@ -64,15 +64,15 @@
             android:layout_height="0dp"
             android:orientation="horizontal"
             android:layout_weight="1"
-            android:weightSum="9"
+            android:weightSum="10"
             android:background="@color/colorBlue"
             >
 
             <TextView
                 android:id="@+id/tvTituloFavoritos"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="8"
                 android:gravity="center"
                 android:text="Zonas favoritas"
                 android:textColor="@color/cardview_light_background"
@@ -81,9 +81,9 @@
 
             <Button
                 android:id="@+id/btnAddFavourites"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="7"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
                 android:text="+"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="10dp"/>
@@ -91,16 +91,16 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerview"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_width="match_parent"
             tools:listitem="@layout/recyclerview_zone_data"
             android:layout_margin="5dp"
-            android:layout_weight="5"/>
+            android:layout_weight="6"/>
 
         <Button
             android:id="@+id/btnFefresh"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_weight="1"
             android:text="refresh"/>
     </LinearLayout>

@@ -114,7 +114,7 @@ public class FavouriteZoneActivity extends AppCompatActivity {
                     weathers.add(child.getValue(Weather.class));
                 }
                 // Ordena los registros por orden cronológico
-                Collections.sort(weathers, Comparator.comparing(w -> w.getCurrent().getLastUpdated()));
+                Collections.sort(weathers, Comparator.comparing(w -> w.getCurrent().getLastUpdated(), Collections.reverseOrder()));
                 adapter.submitList(weathers);
             }
             @Override
