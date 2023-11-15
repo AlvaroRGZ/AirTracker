@@ -73,29 +73,28 @@ public class DataActivity extends AppCompatActivity {
         Button atras = findViewById(R.id.btnFinish);
         atras.setOnClickListener(view -> finish());
 
-        Button borrar = findViewById(R.id.btnClearData);
-        borrar.setOnClickListener(view -> tvResultado.setText("Nada por ahora"));
-        Log.i(TAG, "[ANTEs] listeners");
         Button favoritos = findViewById(R.id.btnSaveAsFavourite);
         favoritos.setOnClickListener(view -> {
+            String toastMessage = "";
             if (!aprobedZoneNameToSave) {
-                String toastMessage = "";
                 if (etNombreZona.getText().toString() == "") {
-                    toastMessage = "Not zone provided";
+                    toastMessage = "Indica una zona";
                 } else {
-                    toastMessage = "You need to search a zone";
+                    toastMessage = "Debes buscar la zona";
                 }
-                Toast.makeText(
-                        getApplicationContext(),
-                        toastMessage,
-                        Toast.LENGTH_LONG
-                ).show();
                 Log.i(TAG, toastMessage);
             } else {
                 Log.i(TAG, "[ANTEs] add");
                 database.addFavouriteToUser(FirebaseAuth.getInstance().getCurrentUser().getUid(), lastNameCalled);
+                toastMessage = lastNameCalled + " añadido a favoritos";
                 Log.i(TAG, "[DESPUES] add");
             }
+            Toast.makeText(
+                    getApplicationContext(),
+                    toastMessage,
+                    Toast.LENGTH_SHORT
+            ).show();
+            Log.i(TAG, toastMessage);
         });
 
         Button getData = findViewById(R.id.btnGetData);

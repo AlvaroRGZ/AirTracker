@@ -66,7 +66,7 @@ public class FavouritesActivity extends AppCompatActivity {
         createRecycler();
 
         TextView nombreUsuario = findViewById(R.id.tvNombreUsuario);
-        nombreUsuario.setText(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        nombreUsuario.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
 
         Button añadirFavoritos = findViewById(R.id.btnAddFavourites);
         añadirFavoritos.setOnClickListener(view -> {

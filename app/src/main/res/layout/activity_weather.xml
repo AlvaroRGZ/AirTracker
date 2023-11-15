@@ -33,21 +33,21 @@
 
             <TextView
                 android:id="@+id/tvTituloFavoritos"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="2"
+                android:layout_weight="7"
                 android:gravity="center"
-                android:text="Zonas favoritas"
+                android:text="Últimos registros"
                 android:textColor="@color/cardview_light_background"
                 android:textSize="20dp"
                 android:textStyle="bold" />
 
             <Button
                 android:id="@+id/btnFefresh"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="7"
-                android:text="+"
+                android:layout_weight="2"
+                android:background="@mipmap/refresh_button"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="10dp"/>
         </LinearLayout>
