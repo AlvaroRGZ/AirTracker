@@ -60,6 +60,9 @@ public class FavouritesActivity extends AppCompatActivity {
 
         apiService = retrofit.create(AirQualityRESTAPIService.class);
 
+        // Comprueba si debe registrar al usuario
+        firebaseClient.registerNewUserFromScratch(FirebaseAuth.getInstance().getCurrentUser());
+
         refreshFavouriteData();
         createRecycler();
 

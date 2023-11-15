@@ -110,15 +110,28 @@ public class FirebaseClient {
     }
 
     public void registerNewUserFromScratch(FirebaseUser user) {
-        User newUser = new User(
-                user.getUid(),
-                user.getEmail().substring(0, user.getEmail().indexOf('@')),
-                user.getEmail(),
-                Arrays.asList("Madrid"));
-        databaseReference
-                .child("user")
-                .child(user.getUid())
-                .setValue(newUser);
+        databaseReference.child("user").child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue(User.class) == null) {
+                    User newUser = new User(
+                            user.getUid(),
+                            user.getEmail().substring(0, user.getEmail().indexOf('@')),
+                            user.getEmail(),
+                            Arrays.asList("Madrid"));
+
+                    databaseReference
+                            .child("user")
+                            .child(user.getUid())
+                            .setValue(newUser);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w("f", "Error retrieving user -> ", databaseError.toException());
+            }
+        });
     }
 
     public void addFavouriteToUser(String uid, String favourite) {
@@ -135,26 +148,6 @@ public class FirebaseClient {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.w("f", "Error retrieving user -> ", databaseError.toException());
-            }
-        });
-    }
-
-    public void removeFavouriteToUser(String uid, String favourite) {
-        databaseReference.child("user").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                User user = dataSnapshot.getValue(User.class);
-                user.removeFavouriteZone(favourite);
-                databaseReference
-                        .child("user")
-                        .child(user.getUid())
-                        .setValue(user);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Handling onCancelled
                 Log.w("f", "Error retrieving user -> ", databaseError.toException());
             }
         });

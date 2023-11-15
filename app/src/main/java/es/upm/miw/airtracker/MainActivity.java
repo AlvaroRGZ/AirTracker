@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +31,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private FirebaseClient firebaseClient;
 
+    private Button btnGoFavourites;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,8 +55,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 ((TextView) findViewById(R.id.textView)).setText(getString(R.string.firebase_user_fmt, username));
 
                 // Cuando se verifica el login se va a la pantalla principal de usuario
-                startActivity(new Intent(MainActivity.this, FavouritesActivity.class));
-                Log.i(LOG_TAG, "[=>] Pantalla de favoritos");
+                //startActivity(new Intent(MainActivity.this, FavouritesActivity.class));
+                //Log.i(LOG_TAG, "[=>] Pantalla de favoritos");
             } else {
                 // user is signed out
                 startActivityForResult(
@@ -67,8 +70,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 setIsSmartLockEnabled(!BuildConfig.DEBUG, true).
                                 build(),
                         RC_SIGN_IN);
+                // Guarda el nuevo usuario en la base de datos
+
+                //firebaseClient.registerNewUserFromScratch(FirebaseAuth.getInstance().getCurrentUser());
             }
         };
+
+        btnGoFavourites = findViewById(R.id.btnGoToFavourites);
+        btnGoFavourites.setOnClickListener(view -> {
+            startActivity(new Intent(MainActivity.this, FavouritesActivity.class));
+            Log.i(LOG_TAG, "[=>] Pantalla de favoritos");
+        });
     }
 
     @Override
@@ -88,8 +100,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_SIGN_IN) {
             if (resultCode == RESULT_OK) {
-                // Guarda el nuevo usuario en la base de datos
-                firebaseClient.registerNewUserFromScratch(FirebaseAuth.getInstance().getCurrentUser());
                 Toast.makeText(this, R.string.signed_in, Toast.LENGTH_SHORT).show();
                 Log.i(LOG_TAG, "onActivityResult " + getString(R.string.signed_in));
             } else if (resultCode == RESULT_CANCELED) {
@@ -102,12 +112,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        startActivity(new Intent(MainActivity.this, DataActivity.class));
-        Log.i(LOG_TAG, "[=>] Pantalla de datos");
+        mFirebaseAuth.signOut();
+        Log.i(LOG_TAG, getString(R.string.signed_out));
     }
 
     public void goToFavourites() {
-        startActivity(new Intent(MainActivity.this, FavouritesActivity.class));
-        Log.i(LOG_TAG, "[=>] Pantalla de favoritos");
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            startActivity(new Intent(MainActivity.this, FavouritesActivity.class));
+            Log.i(LOG_TAG, "[=>] Pantalla de favoritos");
+        } else {
+            Toast.makeText(this, "No se ja iniciado sesión", Toast.LENGTH_SHORT).show();
+        }
+
     }
 }
