@@ -1,27 +1,20 @@
 package es.upm.miw.airtracker;
 
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
-
-import java.util.HashSet;
-import java.util.Set;
 
 import es.upm.miw.airtracker.api.AirQualityRESTAPIService;
 import es.upm.miw.airtracker.firebase.FirebaseClient;
@@ -31,7 +24,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-
 
 public class DataActivity extends AppCompatActivity {
     private static final String TAG = "DATA";
@@ -106,7 +98,6 @@ public class DataActivity extends AppCompatActivity {
                                 "\n    Last: " + weather.getCurrent().getLastUpdated());
 
                         database.writeNewWeather(weather);
-                        registerListeners(weather);
                         aprobedZoneNameToSave = true;
                         lastNameCalled = weather.getLocation().getName();
                     } else {
@@ -127,29 +118,6 @@ public class DataActivity extends AppCompatActivity {
         });
     }
 
-    public void registerListeners(Weather weather) {
-        ValueEventListener postListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.i(TAG, dataSnapshot.toString());
-                Weather weather = dataSnapshot.getValue(Weather.class);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
-            }
-        };
-
-        try {
-            database.getDatabaseRootReference().child("weather")
-                    .child(weather.getLocation().getName())
-                    .child(weather.getCurrent().getLastUpdated())
-                    .addValueEventListener(postListener);
-        } catch (Exception e) {
-            Log.i(TAG, e.getMessage());
-        }
-    }
 
     public void listenChanguesOnEditText() {
         etNombreZona.addTextChangedListener(new TextWatcher() {

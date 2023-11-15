@@ -3,7 +3,6 @@ package es.upm.miw.airtracker.view.weather;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 

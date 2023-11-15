@@ -5,11 +5,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.firebase.ui.auth.AuthUI;
@@ -18,8 +16,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 
 import es.upm.miw.airtracker.firebase.FirebaseClient;
 
@@ -31,7 +27,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private FirebaseAuth.AuthStateListener mAuthStateListener;
 
     private static final int RC_SIGN_IN = 2019;
-    private SharedPreferences preferences;
 
     private FirebaseClient firebaseClient;
 
@@ -40,8 +35,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         findViewById(R.id.logoutButton).setOnClickListener(this);
-
-        preferences = getSharedPreferences("USER_INFO", MODE_PRIVATE);
 
         firebaseClient = new FirebaseClient();
 
@@ -58,6 +51,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Log.i(LOG_TAG, "onAuthStateChanged() " + getString(R.string.firebase_user_fmt, username));
                 ((TextView) findViewById(R.id.textView)).setText(getString(R.string.firebase_user_fmt, username));
 
+                // Cuando se verifica el login se va a la pantalla principal de usuario
                 startActivity(new Intent(MainActivity.this, FavouritesActivity.class));
                 Log.i(LOG_TAG, "[=>] Pantalla de favoritos");
             } else {

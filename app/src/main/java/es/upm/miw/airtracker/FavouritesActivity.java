@@ -8,7 +8,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -28,7 +27,6 @@ import es.upm.miw.airtracker.model.Favourite;
 import es.upm.miw.airtracker.model.User;
 import es.upm.miw.airtracker.model.Weather;
 import es.upm.miw.airtracker.view.favourite.FavouriteListAdapter;
-import es.upm.miw.airtracker.view.weather.WeatherListAdapter;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -93,7 +91,6 @@ public class FavouritesActivity extends AppCompatActivity {
         final FavouriteListAdapter adapter = new FavouriteListAdapter(new FavouriteListAdapter.FavouriteDiff());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        MutableLiveData<List<Favourite>> favouritesLiveData = new MutableLiveData<>();
         String userUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         firebaseClient.getDatabaseReference("user").child(userUID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -102,9 +99,7 @@ public class FavouritesActivity extends AppCompatActivity {
                 if (user != null) {
                     List<String> favourites = user.getFavouriteZones();
                     if (!favourites.isEmpty()) {
-                        //MutableLiveData<List<Favourite>> favouritesLiveData = new MutableLiveData<>();
                         List<Favourite> allfavourites = new ArrayList<>();
-                        //Log.i("foo", favourites.toString());
                         for (String favourite : favourites) {
                             firebaseClient.getDatabaseReference("weather").child(favourite).addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
@@ -118,9 +113,8 @@ public class FavouritesActivity extends AppCompatActivity {
                                     // Elige el más reciente
                                     allfavourites.add(collectedFavourites.get(collectedFavourites.size() - 1));
 
-                                    // Check if this is the last favorite before setting the value
+                                    // Cuando se han procesado todas las zonas actualiza
                                     if (allfavourites.size() == favourites.size()) {
-                                        Log.i("foo", allfavourites.toString());
                                         adapter.submitList(allfavourites);
                                     }
                                 }
@@ -154,7 +148,6 @@ public class FavouritesActivity extends AppCompatActivity {
                 User user = dataSnapshot.getValue(User.class);
                 if (user != null) {
                     List<String> favourites = user.getFavouriteZones();
-                    Log.i(TAG, favourites.toString());
                     if (!favourites.isEmpty()) {
                         for (String favourite : favourites) {
                             Call<Weather> call_async = apiService.getZoneLocation(k, favourite, aqi);

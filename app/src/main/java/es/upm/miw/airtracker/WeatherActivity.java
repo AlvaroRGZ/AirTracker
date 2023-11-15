@@ -96,8 +96,6 @@ public class WeatherActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        MutableLiveData<List<Weather>> weathersLiveData = new MutableLiveData<>();
-        List<Weather> allWeathers = new ArrayList<>();
         // Obtenemos todos los registros de la zona especificada ordenados cronologicamente
         firebaseClient.getDatabaseReference("weather").child(zoneName).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -123,14 +121,10 @@ public class WeatherActivity extends AppCompatActivity {
         call_async.enqueue(new Callback<Weather>() {
             @Override
             public void onResponse(Call<Weather> call, Response<Weather> response) {
-                Log.i("q", "responde" );
                 Weather weather = response.body();
-                Log.i("q", weather.toString());
                 if (null != weather) {
-                    Log.i("q", "si guardo = " );
                     firebaseClient.writeNewWeather(weather);
                 }
-                Log.i("q", "no guardo = " );
             }
             @Override
             public void onFailure(Call<Weather> call, Throwable t) {
