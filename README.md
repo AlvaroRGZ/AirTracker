@@ -1,5 +1,5 @@
 # AirTracker
-#Autor - Álvaro RG
+## Autor - Álvaro RG
 
 ## Introducción
 Se ha desarrollado una aplicación de android para obtener reportes de varias magnitudes temporales
@@ -13,14 +13,16 @@ con los datos obtenidos en su último reporte.
 Estos datos temporales han sido obtenidos mediante el uso de la API ofrecida por:
  * [Air Quality Programmatic APIs](https://aqicn.org/api/es/)
 Para realizar peticiones a esta interfaz se ha hecho uso de la librería `Retrofit`.
-***
+
+
 ### Almacenamiento de información en la nube
 Además, para almacenar todos los datos obtenidos de estas peticiones y las preferencias de cada usuario
 se han empleado las prestaciones de `Google Firebase` para implementar los servicios de:
 
 * *Autenticación*: haciendo uso de `Firebase Authentication`.
 * *Persistencia de datos*: gracias a la herramienta `Firebase Realtime Database`.
-***
+
+
 ## Resumen de prestaciones
 En este apartado se muestra una breve visualización de las diferentes pantallas.
 ### Pantalla principal
