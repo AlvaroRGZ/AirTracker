@@ -27,5 +27,17 @@ se han empleado las prestaciones de `Google Firebase` para implementar los servi
 ## Resumen de prestaciones
 En este apartado se muestra una breve visualización de las diferentes pantallas.
 ### Pantalla principal
-En ella se muestran las zonas favoritas del usuario con sus últimos datos.
+En ella se muestran las zonas favoritas del usuario con sus últimos datos mas importantes
+como la hora a la que recibieron la temperatura y el icono del clima.
+
+<img src="./imgs/favoritos.jpg" width="200" height="350">
+
+En esta pantalla aparecen tres botones:
+* *Refresh*: lanza una peticion a la base de datos en busca de nuevos registros de las
+  zonas favoritas.
+  <img src="./imgs/favoritos_refresh.jpg" width="200" height="350">
+* Botón *+*: Navega a la pantalla para añadir una nueva zona preferida.
+* 
+* *Icono del clima*: al pinchar sobre él, se navega a una pantalla donde se podrán ver todos
+  los registros obtenidos de la zona.
 <img src="./imgs/favoritos.jpg" width="200" height="350">
