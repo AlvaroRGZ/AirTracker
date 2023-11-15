@@ -50,6 +50,7 @@
         <ImageButton
             android:id="@+id/btnIconNav"
             android:layout_width="64dp"
-            android:layout_height="64dp"/>
+            android:layout_height="64dp"
+            android:backgroundTint="@color/colorWhite"/>
     </LinearLayout>
 </LinearLayout>

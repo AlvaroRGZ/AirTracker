@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Picasso;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -43,7 +45,10 @@ public class FavouriteViewHolder extends RecyclerView.ViewHolder {
         temperature.setText(favourite.getTemperature());
         String iconUrl = favourite.getImage();
         if (iconUrl != null && !iconUrl.isEmpty()) {
-            //Picasso.get().load(iconUrl).into(navigateButton);
+            Picasso.get().load("https:" +  iconUrl)
+                    .resize(64, 64)
+                    .centerCrop()
+                    .into(navigateButton);
         }
         navigateButton.setOnClickListener(view -> {
             Intent detalles = new Intent(itemView.getContext(), WeatherActivity.class);

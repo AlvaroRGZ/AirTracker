@@ -4,9 +4,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.Date;
 import java.text.ParseException;
@@ -17,26 +20,34 @@ import es.upm.miw.airtracker.R;
 import es.upm.miw.airtracker.model.Weather;
 
 public class WeatherViewHolder extends RecyclerView.ViewHolder {
-    private  TextView zone;
-    private  TextView country;
     private  TextView lastUpdated;
     private  TextView temperature;
-    private Button navigateButton;
+    private  TextView temperature_feeling;
+    private  TextView wind;
+    private ImageView imgIcon;
 
     private WeatherViewHolder(View itemView) {
         super(itemView);
-        zone = itemView.findViewById(R.id.item_zone);
-        country = itemView.findViewById(R.id.item_country);
         lastUpdated = itemView.findViewById(R.id.item_last_updated);
         temperature = itemView.findViewById(R.id.item_temperature);
-        navigateButton= itemView.findViewById(R.id.btnIconNav);
+        temperature_feeling = itemView.findViewById(R.id.item_temperature_feeling);
+        wind = itemView.findViewById(R.id.item_wind);
+        imgIcon= itemView.findViewById(R.id.imgIcon);
     }
 
     public void bind(Weather weather) {
-        zone.setText(weather.getLocation().getName());
-        country.setText(weather.getLocation().getCountry());
         lastUpdated.setText(formatDateString(weather.getCurrent().getLastUpdated()));
         temperature.setText(weather.getCurrent().getTempC().toString() + "º");
+        temperature_feeling.setText("Sensación " + weather.getCurrent().getFeelslikeC().toString() + "º");
+        wind.setText(weather.getCurrent().getWindKph().toString() + " Km/h");
+
+        String iconUrl = weather.getCurrent().getCondition().getIcon();
+        if (iconUrl != null && !iconUrl.isEmpty()) {
+            Picasso.get().load("https:" +  iconUrl)
+                    .resize(64, 64)
+                    .centerCrop()
+                    .into(imgIcon);
+        }
     }
 
     static WeatherViewHolder create(ViewGroup parent) {
